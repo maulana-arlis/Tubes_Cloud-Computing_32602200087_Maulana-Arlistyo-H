@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta
+            http-equiv="Cache-Control"
+            content="no-store"
+        />
+        <meta charset="UTF-8" />
+        <title>Analisis Sentimen Indonesia</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 2em;
+                max-width: 600px;
+                margin: auto;
+            }
+            textarea {
+                width: 100%;
+                height: 100px;
+            }
+            button {
+                margin-top: 10px;
+            }
+            #result {
+                margin-top: 20px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>🧠 Analisis Sentimen Bahasa Indonesia</h1>
+        <p>Masukkan teks di bawah ini untuk mengetahui sentimennya:</p>
+        <textarea
+            id="inputText"
+            placeholder="Contoh: Produk ini sangat membantu saya."
+        ></textarea
+        ><br />
+        <button onclick="analyze()">Analisis</button>
+        <div id="result"></div>
+
+        <script>
+            async function analyze() {
+                const text = document.getElementById("inputText").value;
+                const resultDiv = document.getElementById("result");
+
+                try {
+                    const response = await fetch("/analyze", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ text }),
+                    });
+
+                    const data = await response.json();
+                    console.log("Response dari server:", data);
+
+                    // ✅ Ubah field di sini:
+                    resultDiv.innerText = `Sentimen: ${data.label.toUpperCase()} (Confidence: ${data.confidence.toFixed(
+                        3
+                    )})`;
+                } catch (error) {
+                    resultDiv.innerText = "Terjadi error: " + error;
+                    console.error("Error:", error);
+                }
+            }
+        </script>
+    </body>
+</html>
